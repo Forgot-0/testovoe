@@ -25,6 +25,7 @@ async def create_secret(
 @router.get(
     "/secret/{key}",
     status_code=status.HTTP_200_OK,
+    response_model=SecretResponse,
     summary="Get a secret",
     description="Get a secret by its key",
 )
@@ -32,11 +33,11 @@ async def get_secret(
     key: str,
     request: Request,
     secret_service: SecretService,
-) -> str:
+) -> SecretResponse:
     secret = await secret_service.get_secret(key, ip_address=request.client.host)
     if not secret:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Secret not found")
-    return secret
+    return SecretResponse(secret_key=secret)
 
 @router.delete(
     "/secret/{key}",
