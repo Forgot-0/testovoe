@@ -6,7 +6,7 @@ from starlette.middleware.cors import CORSMiddleware
 
 from app.secret.routers import router_v1 as secret_router_v1
 from app.core.configs.app import app_config
-from app.core.middlewares import LoggingMiddleware
+from app.core.middlewares import LoggingMiddleware, NoCacheMiddleware
 
 
 @asynccontextmanager
@@ -21,8 +21,8 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
-# app.add_middleware(LoggingMiddleware)
-
+app.add_middleware(LoggingMiddleware)
+app.add_middleware(NoCacheMiddleware)
 
 if app_config.BACKEND_CORS_ORIGINS:
     app.add_middleware(
